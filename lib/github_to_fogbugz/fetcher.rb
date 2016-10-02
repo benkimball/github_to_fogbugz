@@ -9,7 +9,7 @@ module GithubToFogbugz
       @client = ::Octokit::Client.new :access_token => access_token
     end
 
-    def fetch(limit_or_range=nil)
+    def each_issue(limit_or_range=nil)
       index = 1
       limit = nil
       if limit_or_range
@@ -24,18 +24,13 @@ module GithubToFogbugz
       while limit.nil? || (index <= limit) do
         begin
           puts "fetching issue ##{index}"
-          process GhIssue.new(@client.issue(@repo_name, index))
+          yield GhIssue.new(@client.issue(@repo_name, index))
           index += 1
         rescue Octokit::NotFound
           puts "404 Not Found for issue ##{index}, stopping"
           break
         end
       end
-    end
-
-    private
-    def process(issue)
-      puts "#{issue.number} is #{issue.state}"
     end
 
   end
