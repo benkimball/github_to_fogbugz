@@ -1,3 +1,6 @@
+require "dotenv"
+Dotenv.load
+
 require "octokit"
 require "faraday-http-cache"
 

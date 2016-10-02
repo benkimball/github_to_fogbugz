@@ -33,5 +33,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'octokit'
   spec.add_dependency 'faraday-http-cache'
+  spec.add_dependency 'dotenv'
 
 end
