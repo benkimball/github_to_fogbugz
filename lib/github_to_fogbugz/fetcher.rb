@@ -24,19 +24,20 @@ module GithubToFogbugz
       while limit.nil? || (index <= limit) do
         begin
           puts "fetching issue ##{index}"
-          process GhIssue.new(@client.issue(@repo, index))
+          process GhIssue.new(@client.issue(@repo_name, index))
           index += 1
         rescue Octokit::NotFound
           puts "404 Not Found for issue ##{index}, stopping"
           break
         end
       end
-
-      private
-      def process(issue)
-        puts "#{issue.number} is #{issue.state}"
-      end
     end
+
+    private
+    def process(issue)
+      puts "#{issue.number} is #{issue.state}"
+    end
+
   end
 
 end
