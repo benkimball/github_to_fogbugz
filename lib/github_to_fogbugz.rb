@@ -1,0 +1,5 @@
+require "github_to_fogbugz/version"
+require "github_to_fogbugz/gh_resource"
+require "github_to_fogbugz/gh_comment"
+require "github_to_fogbugz/gh_event"
+require "github_to_fogbugz/gh_issue"
