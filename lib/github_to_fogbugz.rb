@@ -34,7 +34,6 @@ module GithubToFogbugz
         rescue => e
           puts "problem with #{issue.number}"
         end
-        sleep 1
       end
     end
 

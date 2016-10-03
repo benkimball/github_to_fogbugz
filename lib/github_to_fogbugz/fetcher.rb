@@ -10,8 +10,6 @@ module GithubToFogbugz
         :login => ENV['GITHUB_USERNAME'],
         :password => ENV['GITHUB_PASSWORD']
       })
-      @timeouts = 0
-      puts @client.rate_limit
     end
 
     def each_issue(limit_or_range=nil)
@@ -32,22 +30,24 @@ module GithubToFogbugz
           yield issue(index)
           index += 1
         rescue Octokit::NotFound
-          puts "#{index} not found"
+          puts "Could not find issue #{index}; either it does not exist or authentication failed"
           break
+        rescue Faraday::TimeoutError
+          puts "GitHub API timeout error on issue #{index}: you may have hit your rate limit"
+          puts rate_limit
         end
       end
     end
 
+    def rate_limit
+      rl = @client.rate_limit
+      "#{rl.remaining} of #{rl.limit} requests remaining; resets in #{rl.resets_in} sec"
+    rescue
+      "Unable to retrieve rate limit"
+    end
+
     def issue(id)
-      i = GhIssue.new(@client.issue(@repo_name, id))
-      @timeouts = 0
-      i
-    rescue Faraday::TimeoutError => e
-      @timeouts += 1
-      raise e if @timeouts > 5
-      puts "github api timeout"
-      sleep 10
-      issue(id)
+      GhIssue.new(@client.issue(@repo_name, id))
     end
 
   end
