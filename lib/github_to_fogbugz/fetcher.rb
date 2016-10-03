@@ -7,10 +7,11 @@ module GithubToFogbugz
     def initialize
       @repo_name = ENV["GITHUB_REPO"]
       @client = Octokit::Client.new({
-        :client_id => ENV['GITHUB_CLIENT_ID'],
-        :client_secret => ENV['GITHUB_CLIENT_SECRET']
+        :login => ENV['GITHUB_USERNAME'],
+        :password => ENV['GITHUB_PASSWORD']
       })
       @timeouts = 0
+      puts @client.rate_limit
     end
 
     def each_issue(limit_or_range=nil)
@@ -24,13 +25,14 @@ module GithubToFogbugz
           limit = limit_or_range
         end
       end
-
+      puts "gathering #{index} through #{limit}"
       while limit.nil? || (index <= limit) do
         begin
           puts index
           yield issue(index)
           index += 1
         rescue Octokit::NotFound
+          puts "#{index} not found"
           break
         end
       end
