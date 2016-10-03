@@ -16,14 +16,22 @@ module GithubToFogbugz
 
     def comments
       @comments ||= begin
-        @resource.rels[:comments].get.data.map {|c| GhComment.new(c) }
+        @resource.rels[:comments].get.data.map {|c| GhComment.new(c) } || []
       end
     end
 
     def events
       @events ||= begin
-        @resource.rels[:events].get.data.map {|e| GhEvent.new(r) }
+        @resource.rels[:events].get.data.map {|e| GhEvent.new(e) } || []
       end
+    end
+
+    def assignments
+      @assignment_events ||= events.select(&:assignment?)
+    end
+
+    def commits
+      @commits ||= events.select(&:commit?)
     end
 
   end

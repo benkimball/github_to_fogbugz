@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "github_to_fogbugz"
+
+GithubToFogbugz::DoIt.to_it

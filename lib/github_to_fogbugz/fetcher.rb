@@ -5,8 +5,8 @@ module GithubToFogbugz
     attr_reader :client, :repo
 
     def initialize
-      @repo_name = ENV["REPO"]
-      @client = ::Octokit::Client.new :access_token => ENV["ACCESS_TOKEN"]
+      @repo_name = ENV["GITHUB_REPO"]
+      @client = Octokit::Client.new :access_token => ENV["GITHUB_ACCESS_TOKEN"]
     end
 
     def each_issue(limit_or_range=nil)
@@ -23,13 +23,16 @@ module GithubToFogbugz
 
       while limit.nil? || (index <= limit) do
         begin
-          raw_issue = @client.issue(@repo_name, index)
+          yield issue(index)
+          index += 1
         rescue Octokit::NotFound
           break
         end
-        yield GhIssue.new(raw_issue)
-        ix += 1
       end
+    end
+
+    def issue(id)
+      GhIssue.new(@client.issue(@repo_name, id))
     end
 
   end

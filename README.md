@@ -20,6 +20,13 @@ Or install it yourself as:
 
     $ gem install github_to_fogbugz
 
+Did you get an error?
+
+    Gem::Ext::BuildError: ERROR: Failed to build gem native extension.
+    Agreeing to the Xcode/iOS license requires admin privileges, please re-run as root via sudo.
+
+Perhaps you have updated XCode recently but haven't launched it to accept its Terms and Conditions dialog. Launch XCode, say you agree, give it your password, quit XCode, try again!
+
 ## Usage
 
 Not exactly sure yet.

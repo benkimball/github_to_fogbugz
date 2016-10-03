@@ -12,3 +12,4 @@ require "github_to_fogbugz"
 
 require "irb"
 IRB.start
+

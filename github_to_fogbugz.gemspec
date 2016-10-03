@@ -31,8 +31,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "minitest", "~> 5.0"
 
-  spec.add_dependency 'octokit'
-  spec.add_dependency 'faraday-http-cache'
-  spec.add_dependency 'dotenv'
+  spec.add_dependency 'octokit'             # talk to github easily
+  spec.add_dependency 'faraday-http-cache'  # cache github responses
+  spec.add_dependency 'ruby-fogbugz'        # talk to fogbugz easily
+  spec.add_dependency 'dotenv'              # load config from .env file
+  spec.add_dependency 'redcarpet'           # convert GH markdown to FB html
 
 end
