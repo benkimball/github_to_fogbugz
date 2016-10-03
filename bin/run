@@ -3,4 +3,12 @@
 require "bundler/setup"
 require "github_to_fogbugz"
 
-GithubToFogbugz::DoIt.to_it
+if ARGV.first =~ /\A\d+\Z/
+  arg = ARGV.first.to_i
+elsif ARGV.first =~ /\A(\d+)\.\.(\d+)\Z/
+  arg = ($1.to_i)..($2.to_i)
+else
+  arg = nil
+end
+
+GithubToFogbugz::DoIt.to_it arg

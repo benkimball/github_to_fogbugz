@@ -25,9 +25,9 @@ module GithubToFogbugz
 
   class DoIt
 
-    def self.to_it
+    def self.to_it(limit_or_range=nil)
       shover = Shover.new
-      Fetcher.new.each_issue do |issue|
+      Fetcher.new.each_issue(limit_or_range) do |issue|
         puts "processing #{issue.number}"
         begin
           shover.create_case issue

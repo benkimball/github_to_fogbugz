@@ -7,6 +7,7 @@ module GithubToFogbugz
     def initialize
       @repo_name = ENV["GITHUB_REPO"]
       @client = Octokit::Client.new :access_token => ENV["GITHUB_ACCESS_TOKEN"]
+      @timeouts = 0
     end
 
     def each_issue(limit_or_range=nil)
@@ -15,7 +16,7 @@ module GithubToFogbugz
       if limit_or_range
         if limit_or_range.respond_to? :first
           index = limit_or_range.first
-          limit_or_range = limit_or_range.last
+          limit = limit_or_range.last
         else
           limit = limit_or_range
         end
@@ -23,6 +24,7 @@ module GithubToFogbugz
 
       while limit.nil? || (index <= limit) do
         begin
+          puts index
           yield issue(index)
           index += 1
         rescue Octokit::NotFound
@@ -32,7 +34,15 @@ module GithubToFogbugz
     end
 
     def issue(id)
-      GhIssue.new(@client.issue(@repo_name, id))
+      i = GhIssue.new(@client.issue(@repo_name, id))
+      @timeouts = 0
+      i
+    rescue Faraday::TimeoutError => e
+      @timeouts += 1
+      raise e if @timeouts > 5
+      puts "github api timeout"
+      sleep 10
+      issue(id)
     end
 
   end
